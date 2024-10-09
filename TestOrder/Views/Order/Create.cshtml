@@ -1,0 +1,76 @@
+﻿@model OrderViewModel
+@{
+    ViewData["Title"] = "Add Sales Order";
+}
+
+<div class="container shadow p-5">
+    <div class="row pb-2">
+        <h2>Add Order</h2>
+    </div>
+
+    <form method="post">
+        <div asp-validation-summary="All"></div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label asp-for="ORDER_NO">Sales Order Number</label>
+                <input type="text" class="form-control mb-3" asp-for="ORDER_NO" placeholder="Input Here">
+                <span asp-validation-for="ORDER_NO" class=" alert-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="ORDER_DATE">Order Date</label>
+                <input type="datetime-local" class="form-control mb-3" asp-for="ORDER_DATE" placeholder="Input Here">
+                <span asp-validation-for="ORDER_DATE" class=" alert-danger"></span>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label asp-for="COM_CUSTOMER_ID">Customer</label>
+                @Html.DropDownListFor(emp => emp.COM_CUSTOMER_ID,
+                new SelectList(ViewBag.Customers, "Id", "Name"),
+                "-- Select Customer --",
+                new { @class = "form-control" })
+                <span asp-validation-for="COM_CUSTOMER_ID" class=" alert-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="ADDRESS">Address</label>
+                <textarea rows="3" class="form-control mb-3" asp-for="ADDRESS" placeholder="Input Here"></textarea>
+                <span asp-validation-for="ADDRESS" class=" alert-danger"></span>
+            </div>
+        </div>
+        <br />
+        <div style="text-align:left;">
+            <button id="btnAddItem" type="button" class="btn btn-primary">Add Item</button>
+        </div>
+        <div>
+            <table class="table table-item" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th class="text-center">No.</th>
+                        <th class="text-center">ACTION</th>
+                        <th class="text-center">ITEM NAME</th>
+                        <th class="text-center">QTY</th>
+                        <th class="text-center">PRICE</th>
+                        <th class="text-center">TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody class="item-row">
+                </tbody>
+            </table>
+        </div>
+        <br />
+        <div style="text-align:center;">
+            <button type="submit" class="btn btn-lg btn-primary p-2"><i class="bi bi-file-plus-fill"></i>Save</button>
+            <a asp-controller="Order" asp-action="Index" class="btn btn-lg btn-warning p-2">Close</a>
+        </div>
+    </form>
+
+</div>
+
+@*//for front end validations*@
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    }

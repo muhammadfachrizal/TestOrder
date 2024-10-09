@@ -1,0 +1,108 @@
+﻿@model OrderViewModel
+
+@{
+    ViewData["Title"] = "Edit Sales Order";
+}
+
+<div class="container shadow p-5">
+    <div class="row pb-2">
+        <h2>Edit Order</h2>
+    </div>
+
+    <form method="post" asp-action="Edit">
+        <div asp-validation-summary="All"></div>
+        <input type="hidden" class="form-control mb-3" asp-for="SO_ORDER_ID">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label asp-for="ORDER_NO">Sales Order Number</label>
+                <input type="text" class="form-control mb-3" asp-for="ORDER_NO" placeholder="Input Here">
+                <span asp-validation-for="ORDER_NO" class=" alert-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="ORDER_DATE">Order Date</label>
+                <input type="datetime-local" class="form-control mb-3" asp-for="ORDER_DATE" placeholder="Input Here">
+                <span asp-validation-for="ORDER_DATE" class=" alert-danger"></span>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label asp-for="COM_CUSTOMER_ID">Customer</label>
+                @Html.DropDownListFor(emp => emp.COM_CUSTOMER_ID,
+                new SelectList(ViewBag.Customers, "Id", "Name"),
+                "-- Select Customer --",
+                new { @class = "form-control" })
+                <span asp-validation-for="COM_CUSTOMER_ID" class=" alert-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="ADDRESS">Address</label>
+                <textarea rows="3" class="form-control mb-3" asp-for="ADDRESS" placeholder="Input Here"></textarea>
+                <span asp-validation-for="ADDRESS" class=" alert-danger"></span>
+            </div>
+        </div>
+        <br />
+        <div style="text-align:left;">
+            <button id="btnAddItem" type="button" class="btn btn-primary">Add Item</button>
+        </div>
+        <div>
+            <table class="table table-item" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th class="text-center">No.</th>
+                        <th class="text-center">ACTION</th>
+                        <th class="text-center">ITEM NAME</th>
+                        <th class="text-center">QTY</th>
+                        <th class="text-center">PRICE</th>
+                        <th class="text-center">TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody class="item-row">
+                    @if (Model.ItemList != null && Model.ItemList.Count > 0)
+                    {
+                        var index = 0;
+                        foreach (var item in Model.ItemList)
+                        {
+                            <tr class="tr-row item-row-@index">
+                                <td>
+                                    <input class="item-index" type="hidden" name="ItemList.Index" value="@index" />
+                                    <input class="item-id" type="hidden" name="ItemList[@index].SO_ORDER_ID" value="@item.SO_ORDER_ID" />
+                                    <input class="item-id" type="hidden" name="ItemList[@index].SO_ITEM_ID" value="@item.SO_ITEM_ID" />
+                                    @(
+                                    index + 1
+                                    )
+                                </td>
+                                <td>
+                                    <div role="group" class="w-60 btn-group">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm(Are you sure you want to delete this data ?)">
+                                            <i class="bi bi-trash-fill"></i> Delete
+                                        </button>
+                                    </div>
+                                    <td><input class="form-control item-name" type="text" name="ItemList[@index].ITEM_NAME" value="@item.ITEM_NAME" /></td>
+                                    <td><input class="form-control qty" type="number" name="ItemList[@index].QUANTITY" value="@item.QUANTITY" /></td>
+                                    <td><input class="form-control price" type="number" name="ItemList[@index].PRICE" value="@item.PRICE" /></td>
+                                    <td>
+                                    <input class="form-control total" type="number" name="ItemList[@index].TOTAL" value="@(item.QUANTITY * item.PRICE)" />
+                                    </td>
+                            </tr>
+                            index++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <br />
+        <div style="text-align:center;">
+            <button type="submit" class="btn btn-lg btn-primary p-2"><i class="bi bi-file-plus-fill"></i>Save</button>
+            <a asp-controller="Order" asp-action="Index" class="btn btn-lg btn-warning p-2">Close</a>
+        </div>       
+    </form>
+
+</div>
+
+
+@*//for front end validations*@
+
+@section Scripts{
+    @{
+            <partial name="_ValidationScriptsPartial" />
+    }
+    }
