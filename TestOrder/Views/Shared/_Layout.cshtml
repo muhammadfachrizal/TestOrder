@@ -69,7 +69,7 @@
         $("#btnAddItem").click(function (e) {
             e.preventDefault();
             var index = ($('.tr-row').length+1);
-            alert(index)
+
             var html = '<tr class="tr-row item-row-' + index + '">'
                 + '<td><input class="item-index" type = "hidden" name = "ItemList.Index" value="' + index + '" />'
                 + '<input class="item-id" type = "hidden" name = "ItemList.[' + index + '].SO_ITEM_ID" value="0" />'
@@ -85,6 +85,30 @@
             $('.item-row').append(html);
             index++;
         });
+
+        function DeleteItem(e, id) {
+            let text = "Are you sure you want to delete this data ?";
+            if (confirm(text) == true) {
+                if (id) {
+                    var data = {
+                        id: id,
+                    }
+                    var controllerUrl = "@Url.Action("DeleteItem", "Order")";
+
+                    $.ajax({
+                        url: controllerUrl,
+                        type: 'POST',
+                        data: data,
+                    }).done(function (data) {
+                        location.href = "/Order/Index"
+                    }).fail(function () {
+                        location.href = "/Order/Index"
+                    })
+                }
+            } else {
+                text = "You canceled!";
+            }
+        }
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
